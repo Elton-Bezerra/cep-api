@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import br.com.boroco.cepapi.CEPApiApplication;
+import br.com.boroco.cepapi.adapters.outbound.persistence.CEPRepositoryImpl;
 import br.com.boroco.cepapi.core.services.CepServiceImpl;
 
 @Configuration
@@ -12,7 +13,7 @@ import br.com.boroco.cepapi.core.services.CepServiceImpl;
 public class BeanConfiguration {
 
     @Bean
-    CepServiceImpl cepServiceImpl() {
-        return new CepServiceImpl();
+    CepServiceImpl cepServiceImpl(CEPRepositoryImpl repository) {
+        return new CepServiceImpl(repository);
     }
 }

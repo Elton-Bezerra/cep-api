@@ -1,7 +1,6 @@
 package br.com.boroco.cepapi.core.entities;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +16,7 @@ public class EnderecoModel implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+	private Integer id;
 
 	private String cep;
 	private String logradouro;
@@ -34,6 +33,14 @@ public class EnderecoModel implements Serializable {
 		this.bairro = bairro;
 		this.localidade = localidade;
 		this.uf = uf;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getCep() {
