@@ -1,5 +1,6 @@
 package br.com.boroco.cepapi.adapters.outbound.persistence;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,5 @@ import br.com.boroco.cepapi.core.entities.EnderecoModel;
 @Repository
 public interface SpringCEPRepository extends JpaRepository<EnderecoModel, UUID> {
 
-	EnderecoModel findByCep(String cep);
+	Optional<EnderecoModel> findByCep(String cep);
 }
