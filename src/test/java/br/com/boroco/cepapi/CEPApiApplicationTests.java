@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import br.com.boroco.cepapi.adapters.inbound.controller.CEPController;
 import br.com.boroco.cepapi.adapters.inbound.dto.DetailDTO;
 import br.com.boroco.cepapi.core.entities.EnderecoModel;
@@ -22,7 +24,7 @@ class CEPApiApplicationTests {
 	
 	@Test
 	@SuppressWarnings("unchecked")
-	public void buscaCepValido() {
+	public void buscaCepValido() throws JsonProcessingException {
 		ResponseEntity<EnderecoModel> busca = (ResponseEntity<EnderecoModel>) controller.busca("03448000");
 		
 		EnderecoModel resposta = busca.getBody();
@@ -40,7 +42,7 @@ class CEPApiApplicationTests {
 	
 	@Test
 	@SuppressWarnings("unchecked")
-	public void buscaCEPNaoEncontrado() {
+	public void buscaCEPNaoEncontrado() throws JsonProcessingException {
 		ResponseEntity<DetailDTO> busca = (ResponseEntity<DetailDTO>) controller.busca("03585010");
 		
 		DetailDTO resposta = busca.getBody();

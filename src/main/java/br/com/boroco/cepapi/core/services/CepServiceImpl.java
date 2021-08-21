@@ -2,6 +2,8 @@ package br.com.boroco.cepapi.core.services;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 
@@ -14,6 +16,9 @@ public class CepServiceImpl implements CepService {
 	
 	private CEPRepository repository;
 	private RemoteCEPService remoteCepService;
+	
+	private Logger logger = LoggerFactory.getLogger(CepServiceImpl.class);
+
 
 	public CepServiceImpl(CEPRepository repository, RemoteCEPService remoteCepService) {
 		this.repository = repository;
@@ -40,10 +45,12 @@ public class CepServiceImpl implements CepService {
 	@Async("threadPoolTaskExecutor")
 	@Override
 	@CacheEvict("ceps")
-	public void buscarCepRemotamente(String cep) {
+	synchronized public void buscarCepRemotamente(String cep) {
 		Optional<EnderecoModel> buscaRemota = remoteCepService.buscaRemota(cep);
 		
+		
 		if(buscaRemota.isPresent()) {
+			logger.info(String.format("Atualizando CEP %s", cep));
 			EnderecoModel enderecoModel = buscaRemota.get();
 			enderecoModel.setCep(enderecoModel.getCep().replace("-", ""));
 			repository.save(buscaRemota.get());

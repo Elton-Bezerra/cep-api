@@ -6,6 +6,8 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.boroco.cepapi.adapters.inbound.dto.DetailDTO;
 import br.com.boroco.cepapi.core.entities.EnderecoModel;
@@ -30,10 +35,15 @@ import io.swagger.annotations.ApiResponses;
 public class CEPController {
 	
 	@Autowired
-	CepService cepService;
+	private CepService cepService;
 	
-    @ExceptionHandler({ ConstraintViolationException.class})
+	private static ObjectMapper mapper = new ObjectMapper();
+	
+	private Logger logger = LoggerFactory.getLogger(CEPController.class);
+	
+    @ExceptionHandler({ ConstraintViolationException.class, JsonProcessingException.class})
     public ResponseEntity<?> handleException(ConstraintViolationException ex) {
+    	
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DetailDTO("CEP inválido", ex.getMessage()));
     }
 	
@@ -54,17 +64,20 @@ public class CEPController {
 			@PathVariable(name = "cep") 
 			@Size(min = 8, max = 8, message = "O CEP deve ter 8 caracteres")
 			@Pattern(regexp = "(^[0-9]{8})", message = "Apenas caracteres númericos são permitidos")
-			String cep) {
+			String cep) throws JsonProcessingException {
 		
+
 		Optional<EnderecoModel> busca = cepService.busca(cep);
 		
 		if(busca.isPresent()) {
-			System.out.println(busca.get().getCep().length());
+			logger.info(mapper.writeValueAsString(busca.get()));
 			return ResponseEntity.ok(busca.get());
 		}
 		
 		String msg = String.format("CEP %s não encontrado" , cep);
-		
+
+		logger.info(msg);
+
 		cepService.buscarCepRemotamente(cep);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailDTO(msg));
 	}
