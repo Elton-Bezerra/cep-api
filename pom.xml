@@ -54,8 +54,8 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
 		</dependency>
-		
-		<!--  Logging dependencies -->
+
+		<!-- Logging dependencies -->
 
 		<dependency>
 			<groupId>ch.qos.logback.contrib</groupId>
@@ -69,10 +69,22 @@
 			<version>0.1.5</version>
 		</dependency>
 
+		<!-- HealthCheck e métricas -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
+		<dependency>
+		  <groupId>io.micrometer</groupId>
+		  <artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

@@ -1,5 +1,7 @@
 package br.com.boroco.cepapi.adapters.configuration;
 
+import java.util.function.Predicate;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -20,8 +22,12 @@ public class SwaggerConfig {
     public Docket api() { 
         return new Docket(DocumentationType.SWAGGER_2)  
           .select()  
-          .apis(RequestHandlerSelectors.basePackage("br.com.boroco.cepapi.adapters.inbound.controller"))              
-          .paths(PathSelectors.any())                          
+          .apis(RequestHandlerSelectors.any())
+          .paths(PathSelectors.any())
+          .paths(Predicate.not(PathSelectors.regex("/cep-api/error")))
+          .paths(Predicate.not(PathSelectors.regex("/cep-api/actuator")))
+          .paths(Predicate.not(PathSelectors.regex("/cep-api/actuator/info")))
+          .paths(Predicate.not(PathSelectors.regex("/cep-api/actuator/health/.*")))
           .build();                                           
     }
 }
