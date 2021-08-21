@@ -4,9 +4,8 @@ import java.util.Optional;
 
 import br.com.boroco.cepapi.core.entities.EnderecoModel;
 
-public interface CepService {
-	
-	Optional<EnderecoModel> busca(String cep);
-	void buscarCepRemotamente(String cep);
+public interface RemoteCEPService {
+
+	Optional<EnderecoModel> buscaRemota(String cep);
 
 }

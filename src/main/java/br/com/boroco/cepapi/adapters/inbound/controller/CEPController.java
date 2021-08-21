@@ -7,12 +7,14 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.boroco.cepapi.adapters.inbound.dto.DetailDTO;
@@ -21,6 +23,7 @@ import br.com.boroco.cepapi.core.ports.CepService;
 
 @RestController
 @Validated
+@RequestMapping("cep-api")
 public class CEPController {
 	
 	@Autowired
@@ -31,7 +34,10 @@ public class CEPController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DetailDTO("CEP Inválido", ex.getMessage()));
     }
 	
-	@GetMapping(path="cep-api/busca/{cep}", produces = "application/json")
+    
+    
+	@GetMapping(path="busca/{cep}", produces = "application/json")
+	@Cacheable(value="ceps", unless = "#result.getStatusCodeValue()!=200")
 	public ResponseEntity<?> busca(
 			@PathVariable(name = "cep") 
 			@Size(min = 8, max = 8, message = "O CEP deve ter 8 caracteres")
@@ -41,11 +47,16 @@ public class CEPController {
 		Optional<EnderecoModel> busca = cepService.busca(cep);
 		
 		if(busca.isPresent()) {
+			System.out.println(busca.get().getCep().length());
 			return ResponseEntity.ok(busca.get());
 		}
 		
 		String msg = String.format("CEP %s não encontrado" , cep);
+		
+		cepService.buscarCepRemotamente(cep);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DetailDTO(msg));
 	}
+	
+	
 
 }

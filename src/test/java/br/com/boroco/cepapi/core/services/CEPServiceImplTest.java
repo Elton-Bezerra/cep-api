@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.boroco.cepapi.core.entities.EnderecoModel;
 import br.com.boroco.cepapi.core.ports.CEPRepository;
-import br.com.boroco.cepapi.core.ports.CepService;
 
 @ExtendWith(MockitoExtension.class)
 public class CEPServiceImplTest {
