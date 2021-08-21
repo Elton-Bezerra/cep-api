@@ -8,8 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "TB_ENDERECO")
+@ApiModel
 public class EnderecoModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -18,10 +22,19 @@ public class EnderecoModel implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
+    @ApiModelProperty(name = "cep", position = 1, example = "12345678")
 	private String cep;
+    
+    @ApiModelProperty(name = "logradouro", position = 2, example = "Rua Apucarana")
 	private String logradouro;
+    
+    @ApiModelProperty(name = "bairro", position = 3, example = "Vila Gomes Cardim")
 	private String bairro;
+    
+    @ApiModelProperty(name = "localidade", position = 4, example = "São Paulo")    
 	private String localidade;
+    
+    @ApiModelProperty(name = "uf guid", position = 5, example = "SP")
 	private String uf;
 
 	public EnderecoModel() {

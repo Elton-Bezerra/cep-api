@@ -2,10 +2,17 @@ package br.com.boroco.cepapi.adapters.inbound.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class DetailDTO {
 
+	@ApiModelProperty(value = "Mensagem do erro", example = "CEP inválido")
 	private String message;
+	
+	@ApiModelProperty(value = "Detalhes do erro", example = "O CEP deve conter 8 caracteres numéricos")
 	private String detail;
 	
 	public DetailDTO(String message) {
